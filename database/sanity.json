@@ -1,0 +1,34 @@
+{
+  "root": true,
+  "project": {
+    "name": "mantlesea"
+  },
+  "api": {
+    "projectId": "6njdwlk5",
+    "dataset": "production"
+  },
+  "plugins": [
+    "@sanity/base",
+    "@sanity/default-layout",
+    "@sanity/default-login",
+    "@sanity/desk-tool"
+  ],
+  "paths": {
+    "source": "./src",
+    "compiled": "./lib"
+  },
+  "parts": [
+    {
+      "name": "part:@sanity/base/schema",
+      "path": "./schemas/schema"
+    },
+    {
+      "name": "part:@sanity/base/components/unicorn-slider",
+      "description": "React component which provides a slider input"
+    },
+    {
+      "implements": "part:@sanity/base/components/unicorn-slider",
+      "path": "components/Slider.js"
+    }
+  ]
+}
