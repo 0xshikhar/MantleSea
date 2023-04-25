@@ -1,21 +1,14 @@
-// import React from 'react'
-
-// export const Header = () => {
-//     return (
-//         <div>Header</div>
-//     )
-// }
-
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import mantleSeaLogo from '../assets/msea-logo.png'
+import mantleSeaLogo from '../assets/msea-black.png'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { CgProfile } from 'react-icons/cg'
 import { MdOutlineAccountBalanceWallet } from 'react-icons/md'
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const style = {
-    wrapper: `bg-[#04111d] w-screen px-[1.2rem] py-[0.8rem] flex `,
+    wrapper: `bg-black w-screen px-[1.2rem] py-[0.8rem] flex `,
     logoContainer: `flex items-center cursor-pointer`,
     logoText: ` ml-[0.8rem] text-white font-semibold text-2xl`,
     searchBar: `flex flex-1 mx-[0.8rem] w-max-[520px] items-center bg-[#363840] rounded-[0.8rem] hover:bg-[#4c505c]`,
@@ -31,8 +24,8 @@ const Header = () => {
         <div className={style.wrapper}>
             <Link href="/">
                 <div className={style.logoContainer}>
-                    <Image src={mantleSeaLogo} height={40} width={40} />
-                    <div className={style.logoText}>Opensea</div>
+                    <Image src={mantleSeaLogo} height={80} width={200} />
+                    <div className={style.logoText}></div>
                 </div>
             </Link>
             <div className={style.searchBar}>
@@ -56,6 +49,9 @@ const Header = () => {
                 </div>
                 <div className={style.headerIcon}>
                     <MdOutlineAccountBalanceWallet />
+                </div>
+                <div>
+                <ConnectButton></ConnectButton>
                 </div>
             </div>
         </div>

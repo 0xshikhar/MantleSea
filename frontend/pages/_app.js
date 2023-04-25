@@ -17,7 +17,7 @@ import {
 } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
-import MainLayout from "../layout/mainLayout";
+// import MainLayout from "../layout/mainLayout";
 import { useRouter } from "next/router";
 
 const { chains, provider } = configureChains(
@@ -63,9 +63,8 @@ function MyApp({ Component, pageProps }) {
 				initialChain={process.env.NEXT_PUBLIC_DEFAULT_CHAIN}
 				chains={chains}
 			>
-				<MainLayout>
-					<Component {...pageProps} />
-				</MainLayout>
+				<Component {...pageProps} />
+				
 			</RainbowKitProvider>
 		</WagmiConfig>
 	);
