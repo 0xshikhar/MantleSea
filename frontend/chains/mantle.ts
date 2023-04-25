@@ -14,8 +14,8 @@ export const mantleTestnet = {
         default: { http: ['https://rpc.testnet.mantle.xyz/'] },
     },
     blockExplorers: {
-        etherscan: { name: 'Mantle Explorer', url: 'https://explorer.testnet.mantle.xyz/' },
-        default: { name: 'Mantle Explorer', url: 'https://explorer.testnet.mantle.xyz/' },
+        etherscan: { name: 'Mantle Explorer', url: 'https://explorer.testnet.mantle.xyz' },
+        default: { name: 'Mantle Explorer', url: 'https://explorer.testnet.mantle.xyz' },
     },
     // contracts: {
     //     multicall3: {

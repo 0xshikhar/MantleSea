@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { getDefaultWallets, RainbowKitProvider,useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, useAccount, WagmiConfig } from "wagmi";
 import {
 	mainnet,
@@ -45,12 +45,15 @@ function MyApp({ Component, pageProps }) {
 			if (!isReconnected) router.reload();
 		},
 	});
+	// const addRecentTransaction = useAddRecentTransaction();
+
 	return (
 		<WagmiConfig client={wagmiClient}>
 			<RainbowKitProvider
 				modalSize="compact"
 				initialChain={process.env.NEXT_PUBLIC_DEFAULT_CHAIN}
 				chains={chains}
+				showRecentTransactions={true}
 			>
 				<Component {...pageProps} />
 

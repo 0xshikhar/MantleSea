@@ -50,7 +50,7 @@ const Hero = () => {
                                 <div className={style.name}>Doodles</div>
                                 <a
                                     className="text-[#1868b7]"
-                                    href="https://opensea.io/collection/doodles-official"
+                                    href="http://localhost:3000/collections/doodles-official"
                                 >
                                     By Doodles_LLC
 

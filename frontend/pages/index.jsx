@@ -5,10 +5,13 @@ import Header from "../components/Header";
 import Hero from "../components/Hero";
 
 export default function Home() {
+  // useEffect(() => {
+
+  // }, [address])
   return (
     <div>
       <Header />
-      <Hero/>
+      <Hero />
     </div>
   );
 }
