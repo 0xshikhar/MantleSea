@@ -6,15 +6,10 @@ import { configureChains, createClient, useAccount, WagmiConfig } from "wagmi";
 import {
 	mainnet,
 	polygon,
-	optimism,
-	arbitrum,
 	goerli,
-	polygonMumbai,
-	optimismGoerli,
-	arbitrumGoerli,
-	polygonZkEvm,
-	polygonZkEvmTestnet,
+	
 } from "wagmi/chains";
+import { mantleTestnet } from "../chains/mantle";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 // import MainLayout from "../layout/mainLayout";
@@ -25,13 +20,7 @@ const { chains, provider } = configureChains(
 		mainnet,
 		goerli,
 		polygon,
-		polygonMumbai,
-		optimism,
-		optimismGoerli,
-		arbitrum,
-    arbitrumGoerli,
-    polygonZkEvm,
-    polygonZkEvmTestnet
+		mantleTestnet
 	],
 	[alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY }), publicProvider()]
 );
@@ -64,7 +53,7 @@ function MyApp({ Component, pageProps }) {
 				chains={chains}
 			>
 				<Component {...pageProps} />
-				
+
 			</RainbowKitProvider>
 		</WagmiConfig>
 	);
