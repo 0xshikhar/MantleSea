@@ -6,6 +6,8 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import { CgProfile } from 'react-icons/cg'
 import { MdOutlineAccountBalanceWallet } from 'react-icons/md'
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { client } from '../lib/databaseClient'
+
 
 const style = {
     wrapper: `bg-black w-screen px-[1.2rem] py-[0.8rem] flex `,
@@ -24,7 +26,7 @@ const Header = () => {
         <div className={style.wrapper}>
             <Link href="/">
                 <div className={style.logoContainer}>
-                    <Image src={mantleSeaLogo} height={80} width={200} />
+                    <Image src={mantleSeaLogo} height={80} width={200} alt="mantle logo" />
                     <div className={style.logoText}></div>
                 </div>
             </Link>

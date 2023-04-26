@@ -1,11 +1,12 @@
-import React from 'react'
-import { useRouter, useState, useEffect, useMemo } from 'next/router'
+import React,{useState, useEffect, useMemo} from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link';
 // import { ThirdwebSDK } from "@thirdweb-dev/react";
 // import { ThirdwebSDKProvider } from "@thirdweb-dev/react";
 import { ThirdwebSDK } from '@3rdweb/sdk'
-
-
+import { configureChains, createClient } from 'wagmi'
+import { useAccount, Provider,useProvider } from 'wagmi'
+import {client} from '../../lib/databaseClient'
 
 
 const style = {
@@ -30,8 +31,11 @@ const style = {
   description: `text-[#8a939b] text-xl w-max-1/4 flex-wrap mt-4`,
 }
 
+
 const Collections = () => {
   const router = useRouter();
+  const provider = useProvider()
+
   const { collectionId } = router.query;
   console.log(router.query)
   console.log(collectionId)
@@ -42,7 +46,7 @@ const Collections = () => {
   const [listings, setListings] = useState([])
 
   const nftModule = useMemo(()=>{
-    const sdk = new ThirdwebSDK(provider.getSigner(),'https://rpc.testnet.mantle.xyz/')
+    const sdk = new ThirdwebSDK(provider.getSigner(),'https://rpc.testnet.mantle.xyz')
     return sdk.getNFTModule(collectionId)
   })
 
@@ -70,6 +74,33 @@ const Collections = () => {
       setListings(await marketPlaceModule.getAllListings())
     })()
   }, [marketPlaceModule])
+
+  // get collection data from sanity
+  // collectionId is the nft contract address
+  const fetchCollectionData = async (sanityClient = client) => {
+    const query = `*[_type == "marketItems" && contractAddress == "0xBF040B410d560285d1dC03661F09de5a783aB562" ] {
+      "imageUrl": profileImage.asset->url,
+      "bannerImageUrl": bannerImage.asset->url,
+      volumeTraded,
+      createdBy,
+      contractAddress,
+      "creator": createdBy->userName,
+      title, floorPrice,
+      "allOwners": owners[]->,
+      description
+    }`
+
+    const collectionData = await sanityClient.fetch(query)
+
+    console.log(collectionData, '🔥')
+    // the query returns 1 object inside of an array
+    await setCollection(collectionData[0])
+  }
+
+  useEffect(() => {
+    fetchCollectionData()
+  }, [collectionId])
+
 
   return (
     <div className='bg-white'>

@@ -1,13 +1,12 @@
 import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { getDefaultWallets, RainbowKitProvider,useAddRecentTransaction } from "@rainbow-me/rainbowkit";
+import { getDefaultWallets, RainbowKitProvider, useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, useAccount, WagmiConfig } from "wagmi";
 import {
 	mainnet,
 	polygon,
 	goerli,
-	
 } from "wagmi/chains";
 import { mantleTestnet } from "../chains/mantle";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -24,6 +23,13 @@ const { chains, provider } = configureChains(
 	],
 	[alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY }), publicProvider()]
 );
+
+// const { chains,provider } = configureChains([mantleTestnet], [publicProvider()])
+// const { chains, provider } = configureChains(
+// 	[chain.mainnet, chain.polygon],
+// 	[publicProvider()],
+// )
+
 
 const { connectors } = getDefaultWallets({
 	appName: "My Alchemy DApp",
