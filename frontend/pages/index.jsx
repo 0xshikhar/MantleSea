@@ -3,7 +3,7 @@ import InstructionsComponent from "../components/InstructionsComponent";
 import NftGallery from "../components/nftGallery.jsx";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
-import { useAccount } from "wagmi";
+import { useAccount, Provider} from "wagmi";
 import { useEffect, useState } from "react";
 import { client } from "../lib/databaseClient";
 import toast, { Toaster } from 'react-hot-toast';
@@ -17,11 +17,12 @@ export default function Home() {
       style: {
         background: '#04111d',
         color: '#fff',
-      },
+      },  
     }
-    
     )
   }
+
+
 
   useEffect(() => {
     if (!address) return
@@ -39,6 +40,8 @@ export default function Home() {
         welcomeUser(result.userName)
       })()
   }, [address])
+
+  console.log("Provider",Provider)
 
   return (
     <div>

@@ -1,6 +1,12 @@
 import React from 'react'
-import { useRouter,useState, useEffect } from 'next/router'
+import { useRouter, useState, useEffect, useMemo } from 'next/router'
 import Link from 'next/link';
+// import { ThirdwebSDK } from "@thirdweb-dev/react";
+// import { ThirdwebSDKProvider } from "@thirdweb-dev/react";
+import { ThirdwebSDK } from '@3rdweb/sdk'
+
+
+
 
 const style = {
   bannerImageContainer: `h-[20vh] w-screen overflow-hidden flex justify-center items-center`,
@@ -29,6 +35,42 @@ const Collections = () => {
   const { collectionId } = router.query;
   console.log(router.query)
   console.log(collectionId)
+
+
+  const [collection, setCollection] = useState({})
+  const [nfts, setNfts] = useState([])
+  const [listings, setListings] = useState([])
+
+  const nftModule = useMemo(()=>{
+    const sdk = new ThirdwebSDK(provider.getSigner(),'https://rpc.testnet.mantle.xyz/')
+    return sdk.getNFTModule(collectionId)
+  })
+
+  // get all nfts in the collection
+  useEffect(()=>{
+    if(!nftModule) return 
+    ;(async () => {
+      const nfts = await nftModule.getAll()
+      setNfts(nfts)
+    })
+  },[nftModule])
+
+  const marketPlaceModule= useMemo(()=>{
+    // if(!provider) return 
+    const sdk = new ThirdwebSDK(provider.getSigner(),'https://rpc.testnet.mantle.xyz/')
+    return sdk.getMarketplaceModule(
+      '0x472Ae313624fCEcd0638734040968F1559AA78c0' // mantlesea marketplace address
+    )
+  },[provider])
+
+  // get all listings in the collection
+  useEffect(() => {
+    if (!marketPlaceModule) return
+    ;(async () => {
+      setListings(await marketPlaceModule.getAllListings())
+    })()
+  }, [marketPlaceModule])
+
   return (
     <div className='bg-white'>
       <Link href="/">
