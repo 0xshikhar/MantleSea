@@ -7,6 +7,7 @@ import {
 	mainnet,
 	polygon,
 	goerli,
+	polygonMumbai
 } from "wagmi/chains";
 import { mantleTestnet } from "../chains/mantle";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -14,11 +15,15 @@ import { publicProvider } from "wagmi/providers/public";
 // import MainLayout from "../layout/mainLayout";
 import { useRouter } from "next/router";
 
+import { ThirdwebProvider } from "@thirdweb-dev/react";
+
+
 const { chains, provider } = configureChains(
 	[
 		mainnet,
 		goerli,
 		polygon,
+		polygonMumbai,
 		mantleTestnet
 	],
 	[alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY }), publicProvider()]
@@ -61,7 +66,9 @@ function MyApp({ Component, pageProps }) {
 				chains={chains}
 				showRecentTransactions={true}
 			>
-				<Component {...pageProps} />
+				<ThirdwebProvider>
+					<Component {...pageProps} />
+				</ThirdwebProvider>
 
 			</RainbowKitProvider>
 		</WagmiConfig>

@@ -1,12 +1,19 @@
-import React,{useState, useEffect, useMemo} from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link';
-// import { ThirdwebSDK } from "@thirdweb-dev/react";
+
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { Goerli } from "@thirdweb-dev/chains";
+import { useNFTs, useListingsV3,useContract  } from "@thirdweb-dev/react";
 // import { ThirdwebSDKProvider } from "@thirdweb-dev/react";
-import { ThirdwebSDK } from '@3rdweb/sdk'
+// import { ThirdwebSDK } from '@3rdweb/sdk'
+
 import { configureChains, createClient } from 'wagmi'
-import { useAccount, Provider,useProvider } from 'wagmi'
-import {client} from '../../lib/databaseClient'
+// import { useAccount, Provider, useProvider, useContract, useSigner } from 'wagmi'
+
+
+import { client } from '../../lib/databaseClient'
+import NFTGrid from '../../components/NFT/NFTGrid'
 
 
 const style = {
@@ -34,7 +41,10 @@ const style = {
 
 const Collections = () => {
   const router = useRouter();
-  const provider = useProvider()
+
+  // const provider = useProvider();
+  // const { data: signer, isError, isLoading } = useSigner();
+
 
   const { collectionId } = router.query;
   console.log(router.query)
@@ -45,61 +55,12 @@ const Collections = () => {
   const [nfts, setNfts] = useState([])
   const [listings, setListings] = useState([])
 
-  const nftModule = useMemo(()=>{
-    const sdk = new ThirdwebSDK(provider.getSigner(),'https://rpc.testnet.mantle.xyz')
-    return sdk.getNFTModule(collectionId)
-  })
+  // Load all of the NFTs from the NFT Collection
+  const { contract } = useContract("0xFfd9bAddF3f6e427EfAa1A4AEC99131078C1d683");
+  const { data, isLoading } = useNFTs(contract);
 
-  // get all nfts in the collection
-  useEffect(()=>{
-    if(!nftModule) return 
-    ;(async () => {
-      const nfts = await nftModule.getAll()
-      setNfts(nfts)
-    })
-  },[nftModule])
+  console.log("nft data",data)
 
-  const marketPlaceModule= useMemo(()=>{
-    // if(!provider) return 
-    const sdk = new ThirdwebSDK(provider.getSigner(),'https://rpc.testnet.mantle.xyz/')
-    return sdk.getMarketplaceModule(
-      '0x472Ae313624fCEcd0638734040968F1559AA78c0' // mantlesea marketplace address
-    )
-  },[provider])
-
-  // get all listings in the collection
-  useEffect(() => {
-    if (!marketPlaceModule) return
-    ;(async () => {
-      setListings(await marketPlaceModule.getAllListings())
-    })()
-  }, [marketPlaceModule])
-
-  // get collection data from sanity
-  // collectionId is the nft contract address
-  const fetchCollectionData = async (sanityClient = client) => {
-    const query = `*[_type == "marketItems" && contractAddress == "0xBF040B410d560285d1dC03661F09de5a783aB562" ] {
-      "imageUrl": profileImage.asset->url,
-      "bannerImageUrl": bannerImage.asset->url,
-      volumeTraded,
-      createdBy,
-      contractAddress,
-      "creator": createdBy->userName,
-      title, floorPrice,
-      "allOwners": owners[]->,
-      description
-    }`
-
-    const collectionData = await sanityClient.fetch(query)
-
-    console.log(collectionData, '🔥')
-    // the query returns 1 object inside of an array
-    await setCollection(collectionData[0])
-  }
-
-  useEffect(() => {
-    fetchCollectionData()
-  }, [collectionId])
 
 
   return (
@@ -107,6 +68,13 @@ const Collections = () => {
       <Link href="/">
         {collectionId}
       </Link>
+      <NFTGrid
+        data={data}
+        isLoading={isLoading}
+        emptyText={
+          "Looks like there are no NFTs in this collection. Did you import your contract on the thirdweb dashboard? https://thirdweb.com/dashboard"
+        }
+      />
     </div>
   )
 }
