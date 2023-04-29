@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { client } from "../lib/databaseClient";
 import toast, { Toaster } from 'react-hot-toast';
 
+import { Nftdata } from "../components/NFTData";
+
 export default function Home() {
   const { address, isConnecting, isDisconnected } = useAccount()
 
@@ -48,6 +50,7 @@ export default function Home() {
       <Toaster position="top-center" reverseOrder={false}/>
       <Header />
       <Hero />
+      <Nftdata />
     </div>
   );
 }

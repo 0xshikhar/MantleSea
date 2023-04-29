@@ -51,7 +51,7 @@ export default function ProfilePage() {
     });
 
   return (
-    <Container maxWidth="lg">
+    <div>
       <div className={styles.profileHeader}>
         <div
           className={styles.coverImage}
@@ -143,6 +143,6 @@ export default function ProfilePage() {
           ))
         )}
       </div>
-    </Container>
+    </div>
   );
 }

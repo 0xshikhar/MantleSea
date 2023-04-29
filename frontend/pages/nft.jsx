@@ -1,10 +1,12 @@
 import styles from "../styles/Home.module.css";
 import InstructionsComponent from "../components/InstructionsComponent";
 import NFTlisting from "../components/nftListing";
+import { Nftdata } from "../components/NFTData";
+
 
 export default function NFT() {
     return (
-        <div>
+        <div className="bg-white">
             <main>
                 <h1 className="text-3xl bg-white font-bold underline">
                     Hello world!
@@ -12,6 +14,10 @@ export default function NFT() {
                 <NFTlisting />
 
             </main>
+
+            <div>
+                <Nftdata />
+            </div>
         </div>
     );
 }
