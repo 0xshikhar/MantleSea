@@ -1,12 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import Router, { useRouter } from 'next/router'
+import React, { useState } from 'react'
 import mantleSeaLogo from '../assets/msea-black.png'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { CgProfile } from 'react-icons/cg'
 import { MdOutlineAccountBalanceWallet } from 'react-icons/md'
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { client } from '../lib/databaseClient'
+import { useAccount } from 'wagmi'
 
 
 const style = {
@@ -22,6 +24,18 @@ const style = {
 }
 
 const Header = () => {
+    const router = useRouter();
+    const [searchQuery, setSearchQuery] = useState('');
+    const { address, isConnecting, isDisconnected } = useAccount()
+
+
+    // const handleSearch =() => {
+    //     // e.preventDefault()
+    //     const address="/collections/"+{searchQuery};
+    //     console.log("address",address)
+    //     router.push('/collections/[searchQuery]');
+    // }
+
     return (
         <div className={style.wrapper}>
             <Link href="/">
@@ -34,29 +48,38 @@ const Header = () => {
                 <div className={style.searchIcon}>
                     <AiOutlineSearch />
                 </div>
-                <input
+                {/* <input
                     className={style.searchInput}
-                    placeholder="Search for any NFT Collection on Mantle Chain"
-                />
+                    placeholder="Search for any NFT Collection on Mantle Chain" onClick={searchCollection()}
+                /> */}
+                <input className={style.searchInput} type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyPress={(e) => {
+                    if (e.key === 'Enter')
+                        console.log(searchQuery)
+                }} />
+                {/* <Link href={/collections/{searchQuery}} > */}
+                <button onClick={() => {
+                    router.push(`/collections/${searchQuery}`);
+                }} className="text-white px-2">Search</button>
+                {/* </Link> */}
             </div>
             <div className={style.headerItems}>
                 <Link href="/collections/0xBF040B410d560285d1dC03661F09de5a783aB562">
                     <div className={style.headerItem}> Collections </div>
                 </Link>
-                <div className={style.headerItem}> Stats </div>
-                <div className={style.headerItem}> Resources </div>
+                {/* <div className={style.headerItem}> Stats </div> */}
+                {/* <div className={style.headerItem}> Resources </div> */}
                 <div className={style.headerItem}> Create </div>
-                <div className={style.headerIcon}>
+                <div className={style.headerIcon} onClick={() =>{ router.push(`/profile/${address}`) }}>
                     <CgProfile />
                 </div>
                 <div className={style.headerIcon}>
                     <MdOutlineAccountBalanceWallet />
                 </div>
                 <div>
-                <ConnectButton></ConnectButton>
+                    <ConnectButton></ConnectButton>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

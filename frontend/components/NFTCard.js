@@ -33,7 +33,7 @@ const NFTCard = ({ nftItem, title, listings }) => {
   }, [listings, nftItem])
 
   return (
-    <div
+    <div key={nftItem.id}
       className={style.wrapper}
       onClick={() => {
         Router.push({

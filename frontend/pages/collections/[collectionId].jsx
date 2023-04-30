@@ -784,7 +784,7 @@ const Collections = () => {
       </div>
       { }
       {display ? <div className="flex flex-wrap">
-        {tokenMetadata.map((metadata) =>
+        {tokenMetadata.map((metadata,key) =>
           <NFTCard
             key={metadata.id}
             nftItem={metadata}
