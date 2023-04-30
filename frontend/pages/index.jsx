@@ -50,7 +50,7 @@ export default function Home() {
       <Toaster position="top-center" reverseOrder={false}/>
       <Header />
       <Hero />
-      <Nftdata />
+      {/* <Nftdata /> */}
     </div>
   );
 }

@@ -16,7 +16,7 @@ export default function NFT() {
             </main>
 
             <div>
-                <Nftdata />
+                {/* <Nftdata /> */}
             </div>
         </div>
     );

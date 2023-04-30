@@ -2,10 +2,17 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link';
 import Header from '../../components/Header';
+import NFTCard from '../../components/NFTCard'
+import Web3 from 'web3';
+import axios from 'axios';
+// import { Nftdata } from '../../components/NFTData';
+
+
 
 import { CgWebsite } from 'react-icons/cg'
 import { AiOutlineInstagram, AiOutlineTwitter } from 'react-icons/ai'
 import { HiDotsVertical } from 'react-icons/hi'
+import {FaUserAlt} from 'react-icons/fa'
 
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { Goerli } from "@thirdweb-dev/chains";
@@ -22,7 +29,7 @@ import NFTGrid from '../../components/NFT/NFTGrid'
 
 
 const style = {
-  bannerImageContainer: `h-[20vh] w-screen overflow-hidden flex justify-center items-center`,
+  bannerImageContainer: `h-[25vh] w-screen overflow-hidden flex justify-center items-center`,
   bannerImage: `w-full object-cover`,
   infoContainer: `w-screen px-4`,
   midRow: `w-full flex justify-center text-white`,
@@ -46,19 +53,30 @@ const style = {
 
 const Collections = () => {
   const router = useRouter();
+  const { collectionId } = router.query;
 
   // const provider = useProvider();
   // const { data: signer, isError, isLoading } = useSigner();
 
 
-  const { collectionId } = router.query;
-  console.log(router.query)
-  console.log(collectionId)
 
+
+  const [contractAddress, setContractAddress] = useState();
+  // const [walletAddress, setWalletAddress] = useState('');
+  const [name, setName] = useState('');
+  const [symbol, setSymbol] = useState('');
+  const [totalSupply, setTotalSupply] = useState(0);
+  const [tokenMetadata, setTokenMetadata] = useState([]);
 
   const [collection, setCollection] = useState({})
   const [nfts, setNfts] = useState([])
   const [listings, setListings] = useState([])
+
+  const [display, setDisplay] = useState(false)
+
+  // console.log(router.query)
+  // console.log(collectionId)
+
 
   // Load all of the NFTs from the NFT Collection
   // const { contract } = useContract("0xFfd9bAddF3f6e427EfAa1A4AEC99131078C1d683");
@@ -458,89 +476,164 @@ const Collections = () => {
     }
   ];
 
+  // useEffect(() => {
+  //   async function fetchNFTCollectionData() {
+  //     console.log("Contract inside fetch method", contractAddress)
+  //     setContractAddress(collectionId)
+  //     console.log("Contract inside fetch method 2", contractAddress)
+  //     // Create a new Web3 instance
+  //     // const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
+  //     // const provider = new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/eBUL-V72Vx1618tJLXVlbZmID_MoFvxD');
+  //     const provider = new Web3.providers.HttpProvider('https://mantle-testnet.rpc.thirdweb.com/');
+  //     const web3 = new Web3(provider);
 
 
-  const [contractAddress, setContractAddress] = useState('');
-  const [walletAddress, setWalletAddress] = useState('');
-  const [name, setName] = useState('');
-  const [symbol, setSymbol] = useState('');
-  const [totalSupply, setTotalSupply] = useState(0);
-  const [tokenMetadata, setTokenMetadata] = useState([]);
-
-  async function fetchNFTCollectionData() {
-    console.log(contractAddress)
-    // Create a new Web3 instance
-    // const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
-    // const provider = new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/eBUL-V72Vx1618tJLXVlbZmID_MoFvxD');
-    const provider = new Web3.providers.HttpProvider('https://mantle-testnet.rpc.thirdweb.com/');
-    const web3 = new Web3(provider);
+  //     // Create a contract instance using the address and ABI
+  //     const contract = new web3.eth.Contract(indexerERC721ABI, contractAddress);
+  //     console.log("contract", contract)
 
 
-    // Create a contract instance using the address and ABI
-    const contract = new web3.eth.Contract(indexerERC721ABI, contractAddress);
-    console.log("contract", contract)
-
-
-    // Get the name and symbol of the NFT collection
-    const name = await contract.methods.name().call();
-    const symbol = await contract.methods.symbol().call();
-    console.log("name", name)
-    console.log("symbol", symbol)
+  //     // Get the name and symbol of the NFT collection
+  //     const name = await contract.methods.name().call();
+  //     const symbol = await contract.methods.symbol().call();
+  //     console.log("name", name)
+  //     console.log("symbol", symbol)
 
 
 
-    // Get the total number of tokens in the collection
-    const totalSupply = await contract.methods.totalSupply().call();
-    console.log("total supply", totalSupply)
+  //     // Get the total number of tokens in the collection
+  //     const totalSupply = await contract.methods.totalSupply().call();
+  //     console.log("total supply", totalSupply)
 
-    // Create an array to store the metadata for each token
-    const tokenMetadata = [];
+  //     // Create an array to store the metadata for each token
+  //     const tokenMetadata = [];
 
-    function ipfs_url_from_hash(h) {
-      const prefix = "ipfs://";
-      if (h.startsWith(prefix)) {
-        h = h.slice(prefix.length);
+  //     function ipfs_url_from_hash(h) {
+  //       const prefix = "ipfs://";
+  //       if (h.startsWith(prefix)) {
+  //         h = h.slice(prefix.length);
+  //       }
+  //       return "https://ipfs.io/ipfs/" + h;
+  //     }
+
+
+
+  //     // Loop through all token IDs and fetch their metadata
+  //     if (totalSupply > 10) {
+  //       for (let i = 0; i < 5; i++) {
+  //         const tokenId = await contract.methods.tokenByIndex(i).call();
+  //         const tokenURI = await contract.methods.tokenURI(tokenId).call();
+  //         console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
+  //         const response = await axios.get(ipfs_url_from_hash(tokenURI));
+  //         tokenMetadata.push(response.data);
+  //       }
+  //     }
+  //     else {
+  //       for (let i = 0; i < totalSupply; i++) {
+  //         const tokenId = await contract.methods.tokenByIndex(i).call();
+  //         const tokenURI = await contract.methods.tokenURI(tokenId).call();
+  //         console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
+  //         // const response = await axios.get(tokenURI);
+  //         const response = await axios.get(ipfs_url_from_hash(tokenURI));
+  //         tokenMetadata.push(response.data);
+  //       }
+  //     }
+  //     console.log("tokenMetadata", tokenMetadata)
+  //     console.log("total supply", totalSupply)
+
+
+  //     // const [actualSrc, setActualSrc] = useState('')
+  //     // useEffect(() => {
+  //     //     src.then((url) => setActualSrc(url));
+  //     // }, [src]);
+
+  //     // Update the state with the NFT collection data
+  //     setName(name);
+  //     setSymbol(symbol);
+  //     setTotalSupply(totalSupply);
+  //     setTokenMetadata(tokenMetadata);
+  //   }
+  //   fetchNFTCollectionData()
+  // }, [contractAddress]);
+
+  useEffect(() => {
+    async function fetchNFTCollectionData() {
+      // setContractAddress(collectionId)
+      // Create a new Web3 instance
+      // const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
+      // const provider = new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/eBUL-V72Vx1618tJLXVlbZmID_MoFvxD');
+      const provider = new Web3.providers.HttpProvider('https://mantle-testnet.rpc.thirdweb.com/');
+      const web3 = new Web3(provider);
+
+
+      // Create a contract instance using the address and ABI
+      const contract = new web3.eth.Contract(indexerERC721ABI, collectionId);
+      // console.log("contract", contract)
+
+
+      // Get the name and symbol of the NFT collection
+      const name = await contract.methods.name().call();
+      const symbol = await contract.methods.symbol().call();
+      const tokenURI= await contract.methods.balanceOf("0xdeaa150597535Eed8c95Ad090757815F1B9Da15d").call();
+    
+      console.log("name", name)
+      console.log("symbol", symbol)
+      console.log(tokenURI)
+
+
+      // Get the total number of tokens in the collection
+      const totalSupply = await contract.methods.totalSupply().call();
+
+      // Create an array to store the metadata for each token
+      const tokenMetadata = [];
+
+      function ipfs_url_from_hash(h) {
+        const prefix = "ipfs://";
+        if (h.startsWith(prefix)) {
+          h = h.slice(prefix.length);
+        }
+        return "https://ipfs.io/ipfs/" + h;
       }
-      return "https://ipfs.io/ipfs/" + h;
+
+      // Loop through all token IDs and fetch their metadata
+      if (totalSupply > 10) {
+        for (let i = 0; i < 5; i++) {
+          const tokenId = await contract.methods.tokenByIndex(i).call();
+          const tokenURI = await contract.methods.tokenURI(tokenId).call();
+          console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
+          const response = await axios.get(ipfs_url_from_hash(tokenURI));
+          tokenMetadata.push(response.data);
+        }
+      }
+      else {
+        for (let i = 0; i < totalSupply; i++) {
+          const tokenId = await contract.methods.tokenByIndex(i).call();
+          const tokenURI = await contract.methods.tokenURI(tokenId).call();
+          console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
+          // const response = await axios.get(tokenURI);
+          const response = await axios.get(ipfs_url_from_hash(tokenURI));
+          tokenMetadata.push(response.data);
+        }
+      }
+      console.log("tokenMetadata", tokenMetadata)
+      console.log("total supply", totalSupply)
+
+
+      // const [actualSrc, setActualSrc] = useState('')
+      // useEffect(() => {
+      //     src.then((url) => setActualSrc(url));
+      // }, [src]);
+
+      // Update the state with the NFT collection data
+      setName(name);
+      setSymbol(symbol);
+      setTotalSupply(totalSupply);
+      setTokenMetadata(tokenMetadata);
+      setDisplay(true)
     }
 
-
-
-    // Loop through all token IDs and fetch their metadata
-    if (totalSupply > 10) {
-      for (let i = 0; i < 5; i++) {
-        const tokenId = await contract.methods.tokenByIndex(i).call();
-        const tokenURI = await contract.methods.tokenURI(tokenId).call();
-        console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
-        const response = await axios.get(ipfs_url_from_hash(tokenURI));
-        tokenMetadata.push(response.data);
-      }
-    }
-    else {
-      for (let i = 0; i < totalSupply; i++) {
-        const tokenId = await contract.methods.tokenByIndex(i).call();
-        const tokenURI = await contract.methods.tokenURI(tokenId).call();
-        console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
-        // const response = await axios.get(tokenURI);
-        const response = await axios.get(ipfs_url_from_hash(tokenURI));
-        tokenMetadata.push(response.data);
-      }
-    }
-    console.log("tokenMetadata", tokenMetadata)
-    console.log("total supply", totalSupply)
-
-
-    // const [actualSrc, setActualSrc] = useState('')
-    // useEffect(() => {
-    //     src.then((url) => setActualSrc(url));
-    // }, [src]);
-
-    // Update the state with the NFT collection data
-    setName(name);
-    setSymbol(symbol);
-    setTotalSupply(totalSupply);
-    setTokenMetadata(tokenMetadata);
-  }
+    fetchNFTCollectionData();
+  }, [collectionId])
 
   async function fetchNFTsInWallet(walletAddress) {
     // ?module=account&action=tokenlist&address={addressHash} 
@@ -558,14 +651,29 @@ const Collections = () => {
     return nfts;
   }
 
+  // useEffect(() => {
+  //   console.log("Router query", router.query)
+  //   console.log("Collection id", collectionId)
+  //   setContractAddress(collectionId)
+  //   console.log("Contract add:", contractAddress)
+  //   // function delayedFunction() {
+  //   //   setTimeout(() => {
+  //   //     fetchNFTCollectionData()
+  //   //   }, 5000); // wait for 5000 milliseconds (or 5 seconds)
+  //   // }
+  //   // delayedFunction();
+  // }, [])
 
 
 
   return (
-    <div>
+    <div className=''>
+      {/* { fetchNFTCollectionData()} */}
       {/* <Link href="/">
         {collectionId}
+
       </Link> */}
+      {/* <Nftdata/> */}
       {/* <NFTGrid
         data={data}
         isLoading={isLoading}
@@ -576,6 +684,7 @@ const Collections = () => {
 
       {/*  */}
       <Header />
+      {/* <button className='bg-white' onClick={fetchNFTCollectionData}>Load NFTs</button> */}
       <div className={style.bannerImageContainer}>
         <img
           className={style.bannerImage}
@@ -583,7 +692,7 @@ const Collections = () => {
             collection?.bannerImageUrl
               ? collection.bannerImageUrl
               : 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=200&q=80'
-              
+
           }
           alt="banner"
         />
@@ -624,7 +733,7 @@ const Collections = () => {
           </div>
         </div>
         <div className={style.midRow}>
-          <div className={style.title}>{collection?.title}</div>
+          <div className={style.title}>{name}</div>
         </div>
         <div className={style.midRow}>
           <div className={style.createdBy}>
@@ -635,33 +744,34 @@ const Collections = () => {
         <div className={style.midRow}>
           <div className={style.statsContainer}>
             <div className={style.collectionStat}>
-              <div className={style.statValue}>{nfts.length}</div>
+            <div className={style.statValue}>{totalSupply}</div>
               <div className={style.statName}>items</div>
             </div>
             <div className={style.collectionStat}>
               <div className={style.statValue}>
                 {collection?.allOwners ? collection.allOwners.length : ''}
+                <FaUserAlt />
               </div>
               <div className={style.statName}>owners</div>
             </div>
             <div className={style.collectionStat}>
               <div className={style.statValue}>
-                <img
+                {/* <img
                   src="https://storage.opensea.io/files/6f8e2979d428180222796ff4a33ab929.svg"
                   alt="eth"
                   className={style.ethLogo}
-                />
-                {collection?.floorPrice}
+                /> */}
+                10 BIT
               </div>
               <div className={style.statName}>floor price</div>
             </div>
             <div className={style.collectionStat}>
               <div className={style.statValue}>
-                <img
+                {/* <img
                   src="https://storage.opensea.io/files/6f8e2979d428180222796ff4a33ab929.svg"
                   alt="eth"
                   className={style.ethLogo}
-                />
+                /> */}
                 {collection?.volumeTraded}.5K
               </div>
               <div className={style.statName}>volume traded</div>
@@ -672,27 +782,45 @@ const Collections = () => {
           <div className={style.description}>{collection?.description}</div>
         </div>
       </div>
-      <div className="flex flex-wrap ">
-        {nfts.map((nftItem, id) => (
+      { }
+      {display ? <div className="flex flex-wrap">
+        {tokenMetadata.map((metadata) =>
           <NFTCard
-            key={id}
-            nftItem={nftItem}
-            title={collection?.title}
+            key={metadata.id}
+            nftItem={metadata}
+            title={metadata.name}
             listings={listings}
           />
-        ))}
-        {tokenMetadata.map(metadata => <li key={metadata.id}>
-                       
-                        <div>
-                            <IpfsImage hash={metadata.image} alt='my image' className='m-10 mt-2  h-80 w-100 rounded-lg ' onClick={() => { }} />
-                        </div>
-                        <p>{name} #{metadata.id}</p>
-                        {metadata.name} ({metadata.image})
-                        {/* if (Image.startsWith("ipfs://")) {Image = Image.slice("ipfs://".length)} */}
-                        {/* <img src={Image} /> */}
-                    </li>)}
-      </div>
-    </div>
+          // <li key={metadata.id}>
+
+          //   <div>
+          //     <IpfsImage hash={metadata.image} alt='my image' className='m-10 mt-2  h-80 w-100 rounded-lg ' onClick={() => { }} />
+          //   </div>
+          //   <p>{name} #{metadata.id}</p>
+          //   {metadata.name} ({metadata.image})
+          //   {/* if (Image.startsWith("ipfs://")) {Image = Image.slice("ipfs://".length)} */}
+          //   {/* <img src={Image} /> */}
+          // </li>
+        )
+        }
+      </div> :
+        (
+          <div className="flex flex-wrap">
+            <p>Hi display is here</p>
+            {/* {nfts.map((nftItem, id) => (
+          <NFTCard
+            key={metadata.id}
+            nftItem={metadata}
+        title={metadata.name}
+            listings={listings}
+          />
+        ))} */}
+
+
+          </div>
+        )
+      }
+    </div >
   )
 }
 

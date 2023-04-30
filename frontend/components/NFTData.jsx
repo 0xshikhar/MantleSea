@@ -4,7 +4,7 @@ import axios from 'axios';
 import { IpfsImage } from 'react-ipfs-image';
 
 
-export const Nftdata = () => {
+export const Nftdata = (props) => {
 
     // Set up a Web3 provider for the Ethereum mainnet
     // const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/your-infura-project-id');
@@ -405,7 +405,7 @@ export const Nftdata = () => {
     // Define a function to fetch NFT collection data
 
 
-    const [contractAddress, setContractAddress] = useState('');
+    const [contractAddress, setContractAddress] = useState(props.contractAddress);
     const [walletAddress, setWalletAddress] = useState('');
     const [name, setName] = useState('');
     const [symbol, setSymbol] = useState('');

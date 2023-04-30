@@ -36,11 +36,11 @@ const Header = () => {
                 </div>
                 <input
                     className={style.searchInput}
-                    placeholder="Search items, collections, and accounts"
+                    placeholder="Search for any NFT Collection on Mantle Chain"
                 />
             </div>
             <div className={style.headerItems}>
-                <Link href="/collections/0x66a576A977b7Bccf510630E0aA5e450EC11361Fa">
+                <Link href="/collections/0xBF040B410d560285d1dC03661F09de5a783aB562">
                     <div className={style.headerItem}> Collections </div>
                 </Link>
                 <div className={style.headerItem}> Stats </div>
