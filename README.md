@@ -7,7 +7,7 @@ There is no platform on Mantle chain where user can see the NFTs on Mantle chain
 
 NFT Marketplace Contract - https://explorer.testnet.mantle.xyz/address/0x472Ae313624fCEcd0638734040968F1559AA78c0
 
-Bored Ape NFT Collection Contract - https://explorer.testnet.mantle.xyz/address/0xBF040B410d560285d1dC03661F09de5a783aB562 
+Bored Ape NFT Collection Contract (test nft contract) - https://explorer.testnet.mantle.xyz/address/0xBF040B410d560285d1dC03661F09de5a783aB562 
 
 
 ## Need of NFT Marketplace -
@@ -27,3 +27,13 @@ Bored Ape NFT Collection Contract - https://explorer.testnet.mantle.xyz/address/
 * Revenue streams: An NFT marketplace on the Mantle blockchain would provide creators and collectors with new revenue streams and opportunities to monetize their creations.
 
 Overall, an NFT marketplace on the Mantle blockchain would provide creators and collectors with a secure, transparent, and efficient platform to create, trade, and collect NFTs.
+
+### Some Screenshots of the current Web App
+
+![Landing Page](/images/mantlesea-f1.png) 
+![Landing Page](/images/mantlesea-f2.png) 
+![Landing Page](/images/mantlesea-f3.png) 
+![Landing Page](/images/mantlesea-f4.png)
+![Landing Page](/images/mantlesea-f6.png) 
+![Landing Page](/images/mantlesea-1.png) 
+![Landing Page](/images) 
