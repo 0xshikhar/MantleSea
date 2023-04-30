@@ -20,10 +20,6 @@ import { ThirdwebProvider } from "@thirdweb-dev/react";
 
 const { chains, provider } = configureChains(
 	[
-		mainnet,
-		goerli,
-		polygon,
-		polygonMumbai,
 		mantleTestnet
 	],
 	[alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY }), publicProvider()]
