@@ -5,7 +5,7 @@ import {
   useValidEnglishAuctions,
 } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import Container from "../../components/Container/Container";
 import ListingWrapper from "../../components/ListingWrapper/ListingWrapper";
 import NFTGrid from "../../components/NFT/NFTGrid";
@@ -25,9 +25,34 @@ const [randomColor1, randomColor2, randomColor3, randomColor4] = [
   randomColor(),
 ];
 
+
+
 export default function ProfilePage() {
   const router = useRouter();
-  const [tab, setTab] = useState<"nfts" | "listings" | "auctions">("nfts");
+  const [tab, setTab] = useState<"nfts" | "coins" | "listings" | "auctions">("nfts");
+  const [data, setData] = useState([]);
+  const address = router.query.address;
+
+  console.log("address", address)
+
+  // getting wallet data from mantle chain explorer
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(`https://explorer.testnet.mantle.xyz/api?module=account&action=tokenlist&address=${router.query.address}`);
+      const jsonData = await response.json();
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      console.log("JSON DATA", jsonData)
+      setData(jsonData);
+    };
+    fetchData();
+  }, [address]);
+
+
+
 
   // const { contract: nftCollection } = useContract(NFT_COLLECTION_ADDRESS);
 
@@ -79,7 +104,7 @@ export default function ProfilePage() {
           )} */}
         </h1>
       </div>
-      <div className="mx-10">
+      <div className="mx-10 pb-9">
         <div className={styles.tabs}>
           <h3
             className={`${styles.tab} 
@@ -87,6 +112,13 @@ export default function ProfilePage() {
             onClick={() => setTab("nfts")}
           >
             NFTs
+          </h3>
+          <h3
+            className={`${styles.tab} 
+        ${tab === "coins" ? styles.activeTab : ""}`}
+            onClick={() => setTab("coins")}
+          >
+            Coins
           </h3>
           <h3
             className={`${styles.tab} 
@@ -108,13 +140,69 @@ export default function ProfilePage() {
           className={`${tab === "nfts" ? styles.activeTabContent : styles.tabContent
             }`}
         >
+
+          {data?.status == "0" ? <div>loading...</div> :
+            <div>
+              <ul>
+                {data.result?.map((item, id) => (item.type == 'ERC-721' ? <li key={id}>{item.name}</li> : ' '))
+                }
+              </ul>
+            </div>
+          }
+
           {/* <NFTGrid
           data={ownedNfts}
           isLoading={loadingOwnedNfts}
           emptyText="Looks like you don't have any NFTs from this collection. Head to the buy page to buy some!"
         /> */}
         </div>
-        {/* 
+
+        <div
+          className={`${tab === "coins" ? styles.activeTabContent : styles.tabContent
+            }`}
+        >
+
+          {data?.status == "0" ? <div>loading...</div> :
+
+            <div className="overflow-x-auto w-full m-2  bg-black text-white">
+              <table className="table-auto w-full bg-black text-white">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Symbol</th>
+                    <th>Contract Address</th>
+                    <th>Balance</th>
+                    <th>Decimal Places</th>
+                  </tr>
+                </thead>
+
+                {/* row 1 */}
+
+                {data.result?.map((item, id) =>
+                (item.type == 'ERC-20' ?
+                  <tbody>
+                    <tr>
+                      <td>{item.name}</td>
+                      <td>{item.symbol}</td>
+                      <td>{item.contractAddress}</td>
+                      <td>{item.balance}</td>
+                      <td>{item.decimals}</td>
+                    </tr>
+                  </tbody>
+
+                  : ' '
+                ))
+                }
+                {/* </tr> */}
+                {/* </tbody> */}
+              </table>
+            </div>
+          }
+
+        </div>
+      </div>
+
+      {/* 
       <div
         className={`${tab === "listings" ? styles.activeTabContent : styles.tabContent
           }`}
@@ -130,7 +218,7 @@ export default function ProfilePage() {
         )}
       </div> */}
 
-        {/* <div
+      {/* <div
         className={`${tab === "auctions" ? styles.activeTabContent : styles.tabContent
           }`}
       >
@@ -144,8 +232,10 @@ export default function ProfilePage() {
           ))
         )}
       </div> */}
-      </div>
     </div>
+
+
+    // </div >
   );
 }
 
