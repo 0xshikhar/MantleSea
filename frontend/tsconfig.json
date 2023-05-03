@@ -22,7 +22,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "pages/profile/[address].jsx"  ],
   "exclude": [
     "node_modules"
   ]

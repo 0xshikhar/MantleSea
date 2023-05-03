@@ -43,7 +43,7 @@ export default function Home() {
       })()
   }, [address])
 
-  console.log("Provider",Provider)
+  // console.log("Provider",Provider)
 
   return (
     <div>

@@ -29,7 +29,8 @@ const [randomColor1, randomColor2, randomColor3, randomColor4] = [
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [tab, setTab] = useState<"nfts" | "coins" | "listings" | "auctions">("nfts");
+  // const [tab, setTab] = useState<"nfts" | "coins" | "listings" | "auctions">("nfts");
+  const [tab, setTab] = useState("nfts");
   const [data, setData] = useState([]);
   const address = router.query.address;
 
