@@ -142,12 +142,42 @@ export default function ProfilePage() {
         >
 
           {data?.status == "0" ? <div>loading...</div> :
-            <div>
-              <ul>
-                {data.result?.map((item, id) => (item.type == 'ERC-721' ? <li key={id}>{item.name}</li> : ' '))
+            <div className="overflow-x-auto w-full m-2  bg-black text-white">
+              <table className="table-auto w-full bg-black text-white">
+                <thead>
+                  <tr>
+                    <th>NFT Collection Name</th>
+                    <th>Symbol</th>
+                    <th>Quantity</th>
+                    <th>Contract Address</th>                    
+                  </tr>
+                </thead>
+
+                {/* row 1 */}
+
+                {data.result?.map((item, id) =>
+                (item.type == 'ERC-721' ?
+                  <tbody>
+                    <tr>
+                      <td>{item.name}</td>
+                      <td>{item.symbol}</td>
+                      <td>{item.balance}</td>
+                      <td>{item.contractAddress}</td>             
+                    </tr>
+                  </tbody>
+                  : ' '
+                ))
                 }
-              </ul>
+                {/* </tr> */}
+                {/* </tbody> */}
+              </table>
             </div>
+            // <div>
+            //   <ul>
+            //     {data.result?.map((item, id) => (item.type == 'ERC-721' ? <li key={id}>{item.name}</li> : ' '))
+            //     }
+            //   </ul>
+            // </div>
           }
 
           {/* <NFTGrid
