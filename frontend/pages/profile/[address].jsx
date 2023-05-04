@@ -166,9 +166,12 @@ export default function ProfilePage() {
                       <td>{item.symbol}</td>
                       <td>{item.balance}</td>
                       <td>{item.contractAddress}</td>
-                      <Link href="/user/0xBF040B410d560285d1dC03661F09de5a783aB562">
-                        <button>See NFTs</button>
-                      </Link>
+                      <button onClick={() => {
+                        router.push(`/user/${item.contractAddress}`);
+                      }} className="text-white px-2">View NFTs</button>
+                      {/* <Link href="">
+                      <button>See NFTs</button>
+                    </Link> */}
                     </tr>
                   </tbody>
                   : ' '

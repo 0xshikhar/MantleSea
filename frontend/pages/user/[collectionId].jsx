@@ -9,7 +9,7 @@ import { useAccount } from 'wagmi';
 import { CgWebsite } from 'react-icons/cg'
 import { AiOutlineInstagram, AiOutlineTwitter } from 'react-icons/ai'
 import { HiDotsVertical } from 'react-icons/hi'
-import {FaUserAlt} from 'react-icons/fa'
+import { FaUserAlt } from 'react-icons/fa'
 
 
 
@@ -483,8 +483,8 @@ const Collections = () => {
       // Get the name and symbol of the NFT collection
       const name = await contract.methods.name().call();
       const symbol = await contract.methods.symbol().call();
-      const tokenURI= await contract.methods.balanceOf("0xdeaa150597535Eed8c95Ad090757815F1B9Da15d").call();
-    
+      const tokenURI = await contract.methods.balanceOf("0xdeaa150597535Eed8c95Ad090757815F1B9Da15d").call();
+
       console.log("name", name)
       console.log("symbol", symbol)
       console.log(tokenURI)
@@ -507,46 +507,18 @@ const Collections = () => {
       // it will loop through all the nft and match them with the connected wallet address
       for (let i = 0; i < 10; i++) {
         const tokenId = await contract.methods.tokenByIndex(i).call();
-        const tokenOwner=await contract.methods.ownerOf(tokenId).call();
-        console.log("Token Owner",tokenOwner)
-        if(tokenOwner == userAddress){
+        const tokenOwner = await contract.methods.ownerOf(tokenId).call();
+        console.log("Token Owner", tokenOwner)
+        if (tokenOwner == userAddress) {
           const tokenURI = await contract.methods.tokenURI(tokenId).call();
           console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
           const response = await axios.get(ipfs_url_from_hash(tokenURI));
           tokenMetadata.push(response.data);
         }
       }
-
-      // Loop through all token IDs and fetch their metadata
-      // if (totalSupply > 10) {
-      //   for (let i = 0; i < 5; i++) {
-      //     const tokenId = await contract.methods.tokenByIndex(i).call();
-      //     const tokenURI = await contract.methods.tokenURI(tokenId).call();
-      //     console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
-      //     const response = await axios.get(ipfs_url_from_hash(tokenURI));
-      //     tokenMetadata.push(response.data);
-      //   }
-      // }
-      // else {
-      //   for (let i = 0; i < totalSupply; i++) {
-      //     const tokenId = await contract.methods.tokenByIndex(i).call();
-      //     const tokenURI = await contract.methods.tokenURI(tokenId).call();
-      //     console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
-      //     // const response = await axios.get(tokenURI);
-      //     const response = await axios.get(ipfs_url_from_hash(tokenURI));
-      //     tokenMetadata.push(response.data);
-      //   }
-      // }
       console.log("tokenMetadata", tokenMetadata)
       console.log("total supply", totalSupply)
 
-
-      // const [actualSrc, setActualSrc] = useState('')
-      // useEffect(() => {
-      //     src.then((url) => setActualSrc(url));
-      // }, [src]);
-
-      // Update the state with the NFT collection data
       setName(name);
       setSymbol(symbol);
       setTotalSupply(totalSupply);
@@ -573,40 +545,10 @@ const Collections = () => {
     return nfts;
   }
 
-  // useEffect(() => {
-  //   console.log("Router query", router.query)
-  //   console.log("Collection id", collectionId)
-  //   setContractAddress(collectionId)
-  //   console.log("Contract add:", contractAddress)
-  //   // function delayedFunction() {
-  //   //   setTimeout(() => {
-  //   //     fetchNFTCollectionData()
-  //   //   }, 5000); // wait for 5000 milliseconds (or 5 seconds)
-  //   // }
-  //   // delayedFunction();
-  // }, [])
-
-
 
   return (
     <div className=''>
-      {/* { fetchNFTCollectionData()} */}
-      {/* <Link href="/">
-        {collectionId}
-
-      </Link> */}
-      {/* <Nftdata/> */}
-      {/* <NFTGrid
-        data={data}
-        isLoading={isLoading}
-        emptyText={
-          "Looks like there are no NFTs in this collection. Did you import your contract on the thirdweb dashboard? https://thirdweb.com/dashboard"
-        }
-      /> */}
-
-      {/*  */}
       <Header />
-      {/* <button className='bg-white' onClick={fetchNFTCollectionData}>Load NFTs</button> */}
       <div className={style.bannerImageContainer}>
         <img
           className={style.bannerImage}
@@ -659,86 +601,31 @@ const Collections = () => {
         </div>
         <div className={style.midRow}>
           <div className={style.createdBy}>
-            Created by{' '}
-            <span className="text-[#2081e2]">{collection?.creator}</span>
+            NFTs Owned By{' '}
+            <span className="text-[#2081e2]">{userAddress}</span>
           </div>
         </div>
-        <div className={style.midRow}>
-          <div className={style.statsContainer}>
-            <div className={style.collectionStat}>
-            <div className={style.statValue}>{totalSupply}</div>
-              <div className={style.statName}>items</div>
-            </div>
-            <div className={style.collectionStat}>
-              <div className={style.statValue}>
-                {collection?.allOwners ? collection.allOwners.length : ''}
-                <FaUserAlt />
-              </div>
-              <div className={style.statName}>owners</div>
-            </div>
-            <div className={style.collectionStat}>
-              <div className={style.statValue}>
-                {/* <img
-                  src="https://storage.opensea.io/files/6f8e2979d428180222796ff4a33ab929.svg"
-                  alt="eth"
-                  className={style.ethLogo}
-                /> */}
-                10 BIT
-              </div>
-              <div className={style.statName}>floor price</div>
-            </div>
-            <div className={style.collectionStat}>
-              <div className={style.statValue}>
-                {/* <img
-                  src="https://storage.opensea.io/files/6f8e2979d428180222796ff4a33ab929.svg"
-                  alt="eth"
-                  className={style.ethLogo}
-                /> */}
-                {collection?.volumeTraded}.5K
-              </div>
-              <div className={style.statName}>volume traded</div>
-            </div>
-          </div>
-        </div>
+
         <div className={style.midRow}>
           <div className={style.description}>{collection?.description}</div>
         </div>
       </div>
       { }
       {display ? <div className="flex flex-wrap">
-        {tokenMetadata.map((metadata,key) =>
+        {tokenMetadata.map((metadata, key) =>
           <NFTCard
             key={metadata.id}
             nftItem={metadata}
             title={metadata.name}
             listings={listings}
           />
-          // <li key={metadata.id}>
 
-          //   <div>
-          //     <IpfsImage hash={metadata.image} alt='my image' className='m-10 mt-2  h-80 w-100 rounded-lg ' onClick={() => { }} />
-          //   </div>
-          //   <p>{name} #{metadata.id}</p>
-          //   {metadata.name} ({metadata.image})
-          //   {/* if (Image.startsWith("ipfs://")) {Image = Image.slice("ipfs://".length)} */}
-          //   {/* <img src={Image} /> */}
-          // </li>
         )
         }
       </div> :
         (
-          <div className="flex flex-wrap">
-            <p>Hi display is here</p>
-            {/* {nfts.map((nftItem, id) => (
-          <NFTCard
-            key={metadata.id}
-            nftItem={metadata}
-        title={metadata.name}
-            listings={listings}
-          />
-        ))} */}
-
-
+          <div className="flex h-screen flex-wrap">
+            <p className='w-full flex text-white align-middle justify-center'>Please Wait. Loading Data From Mantle Blockchain ...</p>
           </div>
         )
       }
