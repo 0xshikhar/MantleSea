@@ -1,31 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
-import Link from 'next/link';
 import Header from '../../components/Header';
 import NFTCard from '../../components/NFTCard'
 import Web3 from 'web3';
 import axios from 'axios';
-// import { Nftdata } from '../../components/NFTData';
-
-
+import { useAccount } from 'wagmi';
 
 import { CgWebsite } from 'react-icons/cg'
 import { AiOutlineInstagram, AiOutlineTwitter } from 'react-icons/ai'
 import { HiDotsVertical } from 'react-icons/hi'
 import {FaUserAlt} from 'react-icons/fa'
 
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
-import { Goerli } from "@thirdweb-dev/chains";
-import { useNFTs, useListingsV3, useContract } from "@thirdweb-dev/react";
-// import { ThirdwebSDKProvider } from "@thirdweb-dev/react";
-// import { ThirdwebSDK } from '@3rdweb/sdk'
-
-import { configureChains, createClient } from 'wagmi'
-// import { useAccount, Provider, useProvider, useContract, useSigner } from 'wagmi'
-
-
-import { client } from '../../lib/databaseClient'
-import NFTGrid from '../../components/NFT/NFTGrid'
 
 
 const style = {
@@ -54,6 +39,9 @@ const style = {
 const Collections = () => {
   const router = useRouter();
   const { collectionId } = router.query;
+  const { address, isConnecting, isDisconnected } = useAccount()
+  const userAddress = address;
+
 
   // const provider = useProvider();
   // const { data: signer, isError, isLoading } = useSigner();
@@ -476,85 +464,6 @@ const Collections = () => {
     }
   ];
 
-  // useEffect(() => {
-  //   async function fetchNFTCollectionData() {
-  //     console.log("Contract inside fetch method", contractAddress)
-  //     setContractAddress(collectionId)
-  //     console.log("Contract inside fetch method 2", contractAddress)
-  //     // Create a new Web3 instance
-  //     // const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
-  //     // const provider = new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/eBUL-V72Vx1618tJLXVlbZmID_MoFvxD');
-  //     const provider = new Web3.providers.HttpProvider('https://mantle-testnet.rpc.thirdweb.com/');
-  //     const web3 = new Web3(provider);
-
-
-  //     // Create a contract instance using the address and ABI
-  //     const contract = new web3.eth.Contract(indexerERC721ABI, contractAddress);
-  //     console.log("contract", contract)
-
-
-  //     // Get the name and symbol of the NFT collection
-  //     const name = await contract.methods.name().call();
-  //     const symbol = await contract.methods.symbol().call();
-  //     console.log("name", name)
-  //     console.log("symbol", symbol)
-
-
-
-  //     // Get the total number of tokens in the collection
-  //     const totalSupply = await contract.methods.totalSupply().call();
-  //     console.log("total supply", totalSupply)
-
-  //     // Create an array to store the metadata for each token
-  //     const tokenMetadata = [];
-
-  //     function ipfs_url_from_hash(h) {
-  //       const prefix = "ipfs://";
-  //       if (h.startsWith(prefix)) {
-  //         h = h.slice(prefix.length);
-  //       }
-  //       return "https://ipfs.io/ipfs/" + h;
-  //     }
-
-
-
-  //     // Loop through all token IDs and fetch their metadata
-  //     if (totalSupply > 10) {
-  //       for (let i = 0; i < 5; i++) {
-  //         const tokenId = await contract.methods.tokenByIndex(i).call();
-  //         const tokenURI = await contract.methods.tokenURI(tokenId).call();
-  //         console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
-  //         const response = await axios.get(ipfs_url_from_hash(tokenURI));
-  //         tokenMetadata.push(response.data);
-  //       }
-  //     }
-  //     else {
-  //       for (let i = 0; i < totalSupply; i++) {
-  //         const tokenId = await contract.methods.tokenByIndex(i).call();
-  //         const tokenURI = await contract.methods.tokenURI(tokenId).call();
-  //         console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
-  //         // const response = await axios.get(tokenURI);
-  //         const response = await axios.get(ipfs_url_from_hash(tokenURI));
-  //         tokenMetadata.push(response.data);
-  //       }
-  //     }
-  //     console.log("tokenMetadata", tokenMetadata)
-  //     console.log("total supply", totalSupply)
-
-
-  //     // const [actualSrc, setActualSrc] = useState('')
-  //     // useEffect(() => {
-  //     //     src.then((url) => setActualSrc(url));
-  //     // }, [src]);
-
-  //     // Update the state with the NFT collection data
-  //     setName(name);
-  //     setSymbol(symbol);
-  //     setTotalSupply(totalSupply);
-  //     setTokenMetadata(tokenMetadata);
-  //   }
-  //   fetchNFTCollectionData()
-  // }, [contractAddress]);
 
   useEffect(() => {
     async function fetchNFTCollectionData() {
@@ -595,26 +504,39 @@ const Collections = () => {
         return "https://ipfs.io/ipfs/" + h;
       }
 
+      // it will loop through all the nft and match them with the connected wallet address
+      for (let i = 0; i < 10; i++) {
+        const tokenId = await contract.methods.tokenByIndex(i).call();
+        const tokenOwner=await contract.methods.ownerOf(tokenId).call();
+        console.log("Token Owner",tokenOwner)
+        if(tokenOwner == userAddress){
+          const tokenURI = await contract.methods.tokenURI(tokenId).call();
+          console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
+          const response = await axios.get(ipfs_url_from_hash(tokenURI));
+          tokenMetadata.push(response.data);
+        }
+      }
+
       // Loop through all token IDs and fetch their metadata
-      if (totalSupply > 10) {
-        for (let i = 0; i < 5; i++) {
-          const tokenId = await contract.methods.tokenByIndex(i).call();
-          const tokenURI = await contract.methods.tokenURI(tokenId).call();
-          console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
-          const response = await axios.get(ipfs_url_from_hash(tokenURI));
-          tokenMetadata.push(response.data);
-        }
-      }
-      else {
-        for (let i = 0; i < totalSupply; i++) {
-          const tokenId = await contract.methods.tokenByIndex(i).call();
-          const tokenURI = await contract.methods.tokenURI(tokenId).call();
-          console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
-          // const response = await axios.get(tokenURI);
-          const response = await axios.get(ipfs_url_from_hash(tokenURI));
-          tokenMetadata.push(response.data);
-        }
-      }
+      // if (totalSupply > 10) {
+      //   for (let i = 0; i < 5; i++) {
+      //     const tokenId = await contract.methods.tokenByIndex(i).call();
+      //     const tokenURI = await contract.methods.tokenURI(tokenId).call();
+      //     console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
+      //     const response = await axios.get(ipfs_url_from_hash(tokenURI));
+      //     tokenMetadata.push(response.data);
+      //   }
+      // }
+      // else {
+      //   for (let i = 0; i < totalSupply; i++) {
+      //     const tokenId = await contract.methods.tokenByIndex(i).call();
+      //     const tokenURI = await contract.methods.tokenURI(tokenId).call();
+      //     console.log("tokenURI : ", tokenURI, "tokenId : ", tokenId)
+      //     // const response = await axios.get(tokenURI);
+      //     const response = await axios.get(ipfs_url_from_hash(tokenURI));
+      //     tokenMetadata.push(response.data);
+      //   }
+      // }
       console.log("tokenMetadata", tokenMetadata)
       console.log("total supply", totalSupply)
 

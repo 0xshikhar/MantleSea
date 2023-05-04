@@ -6,6 +6,7 @@ import {
 } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 // import Container from "../../components/Container/Container";
 import ListingWrapper from "../../components/ListingWrapper/ListingWrapper";
 import NFTGrid from "../../components/NFT/NFTGrid";
@@ -16,7 +17,8 @@ import {
 } from "../../chains/mantle";
 import styles from "../../styles/Profile.module.css";
 import randomColor from "../../util/randomColor";
-import Header from "../../components/Header"
+import Header from "../../components/Header";
+
 
 const [randomColor1, randomColor2, randomColor3, randomColor4] = [
   randomColor(),
@@ -150,7 +152,7 @@ export default function ProfilePage() {
                     <th>NFT Collection Name</th>
                     <th>Symbol</th>
                     <th>Quantity</th>
-                    <th>Contract Address</th>                    
+                    <th>Contract Address</th>
                   </tr>
                 </thead>
 
@@ -163,7 +165,10 @@ export default function ProfilePage() {
                       <td>{item.name}</td>
                       <td>{item.symbol}</td>
                       <td>{item.balance}</td>
-                      <td>{item.contractAddress}</td>             
+                      <td>{item.contractAddress}</td>
+                      <Link href="/user/0xBF040B410d560285d1dC03661F09de5a783aB562">
+                        <button>See NFTs</button>
+                      </Link>
                     </tr>
                   </tbody>
                   : ' '
@@ -263,10 +268,17 @@ export default function ProfilePage() {
           ))
         )}
       </div> */}
+
+      {/* creating popup modal for listing nfts in wallet */}
+      <input type="checkbox" id="my-modal-3" className="modal-toggle" />
+      <div className="modal text-black">
+        <div className="modal-box w-11/12 max-w-5xl">
+          <label htmlFor="my-modal-3" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+          <h3 className="text-lg font-bold">Congratulations random Internet user!</h3>
+          <p className="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
+        </div>
+      </div>
     </div>
-
-
-    // </div >
   );
 }
 
