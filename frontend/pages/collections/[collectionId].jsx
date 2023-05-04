@@ -667,7 +667,7 @@ const Collections = () => {
 
 
   return (
-    <div className=''>
+    <div className='h-screen'>
       {/* { fetchNFTCollectionData()} */}
       {/* <Link href="/">
         {collectionId}
@@ -783,7 +783,7 @@ const Collections = () => {
         </div>
       </div>
       { }
-      {display ? <div className="flex flex-wrap">
+      {display ? <div className="flex bg-black flex-wrap">
         {tokenMetadata.map((metadata,key) =>
           <NFTCard
             key={metadata.id}
@@ -805,7 +805,7 @@ const Collections = () => {
         }
       </div> :
         (
-          <div className="flex flex-wrap">
+          <div className="flex h-screen flex-wrap">
             <p>Hi display is here</p>
             {/* {nfts.map((nftItem, id) => (
           <NFTCard

@@ -80,7 +80,7 @@ export default function ProfilePage() {
   //   });
 
   return (
-    <div className="pt-4 text-white">
+    <div className="pt-4 h-full text-white bg-black">
       <Header />
       <div className="px-6 pt-4">
         <div
@@ -145,7 +145,7 @@ export default function ProfilePage() {
         >
 
           {data?.status == "0" ? <div>loading...</div> :
-            <div className="overflow-x-auto w-full m-2  bg-black text-white">
+            <div className="overflow-x-auto w-full h-full m-2  bg-black text-white">
               <table className="table-auto w-full bg-black text-white">
                 <thead>
                   <tr>
@@ -203,7 +203,7 @@ export default function ProfilePage() {
 
           {data?.status == "0" ? <div>loading...</div> :
 
-            <div className="overflow-x-auto w-full m-2  bg-black text-white">
+            <div className="overflow-x-auto w-full h-full m-2  bg-black text-white">
               <table className="table-auto w-full bg-black text-white">
                 <thead>
                   <tr>
@@ -273,14 +273,14 @@ export default function ProfilePage() {
       </div> */}
 
       {/* creating popup modal for listing nfts in wallet */}
-      <input type="checkbox" id="my-modal-3" className="modal-toggle" />
+      {/* <input type="checkbox" id="my-modal-3" className="modal-toggle" />
       <div className="modal text-black">
         <div className="modal-box w-11/12 max-w-5xl">
           <label htmlFor="my-modal-3" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
           <h3 className="text-lg font-bold">Congratulations random Internet user!</h3>
           <p className="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

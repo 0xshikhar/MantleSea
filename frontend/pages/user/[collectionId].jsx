@@ -547,7 +547,7 @@ const Collections = () => {
 
 
   return (
-    <div className=''>
+    <div className='h-full'>
       <Header />
       <div className={style.bannerImageContainer}>
         <img
@@ -611,7 +611,7 @@ const Collections = () => {
         </div>
       </div>
       { }
-      {display ? <div className="flex flex-wrap">
+      {display ? <div className="flex flex-wrap bg-black">
         {tokenMetadata.map((metadata, key) =>
           <NFTCard
             key={metadata.id}
@@ -624,7 +624,7 @@ const Collections = () => {
         }
       </div> :
         (
-          <div className="flex h-screen flex-wrap">
+          <div className="flex h-screen bg-black flex-wrap">
             <p className='w-full flex text-white align-middle justify-center'>Please Wait. Loading Data From Mantle Blockchain ...</p>
           </div>
         )
