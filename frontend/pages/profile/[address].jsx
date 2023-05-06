@@ -15,6 +15,7 @@ import {
   MARKETPLACE_ADDRESS,
   NFT_COLLECTION_ADDRESS,
 } from "../../chains/mantle";
+
 import styles from "../../styles/Profile.module.css";
 import randomColor from "../../util/randomColor";
 import Header from "../../components/Header";
